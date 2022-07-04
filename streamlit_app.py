@@ -1,6 +1,7 @@
-from email import message_from_binary_file
 import streamlit
 import pandas
+import requests
+import snowflake.connector
 
 streamlit.header('Breakfast Menu')
 streamlit.text('🥣 Omega 3 & Blueberry Oatmeal')
@@ -17,3 +18,10 @@ if fruits_selected:
 else:
     fruits_to_show = my_fruit_list
 streamlit.dataframe(fruits_to_show)
+
+streamlit.header('Fruityvice Fruit Advice')
+fruit_choice = streamlit.text_input('What fruit would you like information about?','Kiwi')
+streamlit.write('The user entered ', fruit_choice)
+fruityvice_response = requests.get('https://www.fruityvice.com/api/fruit/' + fruit_choice)
+fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+streamlit.dataframe(fruityvice_normalized)
